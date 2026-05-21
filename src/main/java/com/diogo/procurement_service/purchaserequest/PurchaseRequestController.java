@@ -1,5 +1,6 @@
 package com.diogo.procurement_service.purchaserequest;
 
+import com.diogo.procurement_service.purchaserequest.dto.PurchaseRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,23 +14,25 @@ public class PurchaseRequestController {
     private final PurchaseRequestService service;
 
     @GetMapping
-    public List<PurchaseRequest> findAll() {
-        return service.findAll();
+    public List<PurchaseRequestDTO> findAll() {
+        return service.findAll().stream()
+                .map(PurchaseRequestDTO::from)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PurchaseRequest> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<PurchaseRequestDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(PurchaseRequestDTO.from(service.findById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<PurchaseRequest> create(@RequestBody PurchaseRequest purchaseRequest) {
-        return ResponseEntity.ok(service.create(purchaseRequest));
+    public ResponseEntity<PurchaseRequestDTO> create(@RequestBody PurchaseRequest purchaseRequest) {
+        return ResponseEntity.ok(PurchaseRequestDTO.from(service.create(purchaseRequest)));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<PurchaseRequest> updateStatus(@PathVariable Long id, @RequestParam PurchaseRequestStatus status) {
-        return ResponseEntity.ok(service.updateStatus(id, status));
+    public ResponseEntity<PurchaseRequestDTO> updateStatus(@PathVariable Long id, @RequestParam PurchaseRequestStatus status) {
+        return ResponseEntity.ok(PurchaseRequestDTO.from(service.updateStatus(id, status)));
     }
 
     @DeleteMapping("/{id}")

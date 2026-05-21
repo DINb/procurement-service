@@ -28,9 +28,13 @@ public class ApprovalService {
         approval.setStatus(ApprovalStatus.PENDING);
         approval.setDate(LocalDateTime.now());
 
-        PurchaseRequest pr = purchaseRequestRepository.findById(
-        approval.getPurchaseRequest().getId())
-        .orElseThrow(() -> new RuntimeException("Purchase Request not found"));
+        PurchaseRequest pr = purchaseRequestRepository
+                .findById(approval.getPurchaseRequest().getId())
+                .orElseThrow(() -> new RuntimeException("Purchase Request not found"));
+
+        pr.setStatus(PurchaseRequestStatus.PENDING);
+        purchaseRequestRepository.save(pr);
+
         return approvalRepository.save(approval);
     }
 
