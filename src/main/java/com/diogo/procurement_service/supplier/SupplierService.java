@@ -1,7 +1,10 @@
 package com.diogo.procurement_service.supplier;
 
+import com.diogo.procurement_service.supplier.dto.SupplierDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -16,21 +19,31 @@ public class SupplierService {
 
     public Supplier findById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Supplier not found"));
+                .orElseThrow(() -> new RuntimeException("Supplier not found with id: " + id));
     }
 
-    public Supplier create(Supplier supplier) {
+    @Transactional
+    public Supplier create(SupplierDTO dto) {
+        Supplier supplier = new Supplier();
+        supplier.setName(dto.name());
+        supplier.setEmail(dto.email());
+        
         return repository.save(supplier);
     }
 
-    public Supplier update(Long id, Supplier supplier) {
-        Supplier existing = findById(id);
-        existing.setName(supplier.getName());
-        existing.setEmail(supplier.getEmail());
-        return repository.save(existing);
+    @Transactional
+    public Supplier update(Long id, SupplierDTO dto) {
+        Supplier existingSupplier = findById(id);
+        
+        existingSupplier.setName(dto.name());
+        existingSupplier.setEmail(dto.email());
+        
+        return repository.save(existingSupplier);
     }
 
+    @Transactional
     public void delete(Long id) {
-        repository.deleteById(id);
+        Supplier supplier = findById(id);
+        repository.delete(supplier);
     }
 }

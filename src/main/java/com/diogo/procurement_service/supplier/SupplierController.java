@@ -1,6 +1,7 @@
 package com.diogo.procurement_service.supplier;
 
 import com.diogo.procurement_service.supplier.dto.SupplierDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +27,13 @@ public class SupplierController {
     }
 
     @PostMapping
-    public ResponseEntity<SupplierDTO> create(@RequestBody Supplier supplier) {
-        return ResponseEntity.ok(SupplierDTO.from(service.create(supplier)));
+    public ResponseEntity<SupplierDTO> create(@RequestBody @Valid SupplierDTO dto) {
+        return ResponseEntity.ok(SupplierDTO.from(service.create(dto)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SupplierDTO> update(@PathVariable Long id, @RequestBody Supplier supplier) {
-        return ResponseEntity.ok(SupplierDTO.from(service.update(id, supplier)));
+    public ResponseEntity<SupplierDTO> update(@PathVariable Long id, @RequestBody @Valid SupplierDTO dto) {
+        return ResponseEntity.ok(SupplierDTO.from(service.update(id, dto)));
     }
 
     @DeleteMapping("/{id}")
